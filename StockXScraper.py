@@ -14,14 +14,19 @@ headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
 
 
 def recent_sales():
-    page = url + '5e6a1e57-1c7d-435a-82bd-5666a13560fe/activity?state=480&currency=GBP&limit=1000&page=1&sort=createdAt&order=DESC&country=GB'
-    cut_off_date = date.today() - datetime.timedelta(0)
+    page = url + '5e6a1e57-1c7d-435a-82bd-5666a13560fe/activity?state=480&currency=GBP&limit=10&page=1&sort=createdAt&order=DESC&country=GB'
+    cut_off_date = date.today() - datetime.timedelta(30)
 
     response = requests.get(page, headers = headers).json()['ProductActivity']
-    size_filtered_sales = [x for x in response if(x['shoeSize'] == '10')]
+    size_filtered_sales = [x for x in response if(x['shoeSize'] == '9')]
     date_filtered_sales = [x for x in size_filtered_sales if (datetime.datetime.strptime(x['createdAt'][:10], "%Y-%m-%d").date() >= cut_off_date)]
-
-    # print(date_filtered_sales)
+    total_price = 0.0
+    number_of_shoes = 0
+    for x in date_filtered_sales:
+        total_price += float(x['localAmount'])
+        number_of_shoes += 1
+        pass
+    avg = total_price / number_of_shoes
     # with open('data.txt', 'w') as outfile:
     #     json.dump(date_filtered_sales, outfile)
     pass
